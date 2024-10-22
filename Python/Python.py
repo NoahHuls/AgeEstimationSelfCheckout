@@ -23,13 +23,14 @@ class AgeEsitimationModel:
         def selectModel(self, idx: int) -> bool:
             if idx >= len(self.models):
                 return False
-            self.model = torch.load(model) if self.models[0]["type"] == "torch" else load_model(model)
-            if self.models[0]["type"] == "torch":
+            modelstr = self.models[idx]["model"]
+            self.model = torch.load(modelstr) if self.models[idx]["type"] == "torch" else load_model(modelstr)
+            if self.models[idx]["type"] == "torch":
                 self.model.eval()
             return True
 
-        def getModelList(self) -> list:
-            return self.models
+    def getModelList(self) -> list:
+        return self.models
 
     def predict(self, images):
         # todo: added face detection
