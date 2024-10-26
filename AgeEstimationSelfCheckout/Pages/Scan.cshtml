@@ -10,7 +10,19 @@
             <button class="btn btn-primary mb-1" onclick="location.href='?action=addBread'">Brood</button>
             <button class="btn btn-primary mb-1" onclick="location.href='?action=addBeer'">Bier</button>
             <button class="btn btn-primary mb-1" onclick="location.href='?action=addCheese'">Kaas</button>
+
+            <div id="timerCard" class="card mt-3 p-3" style="display: @(ScanModel.AgeVerificationIsAltered ? "none" : "block")">
+                <h5>Automatische Leeftijdscontrole</h5>
+                <button id="startTimerButton" class="btn btn-success position-relative" onclick="activateAutomaticAgeVerification()">
+                    <span id="buttonText">Activeer</span>
+                    <div id="progressBar" class="progress" style="display: none; height: 5px;">
+                        <div id="progress" class="progress-bar progress-bar-animated" role="progressbar" style="width: 100%; height: 100%;"></div>
+                    </div>
+                </button>
+                <button class="btn btn-link ms-2" onclick="closeTimerCard()" style="text-decoration: none;">Ik wil niet gebruik maken van automatische leeftijdscontrole</button>
+            </div>
         </div>
+
         <div class="row mt-5">
             <div class="col-3">
                 <div class="card text-center mb-4" style="width: 80px; height: 60px;">
@@ -25,7 +37,24 @@
         </div>
     </div>
     <div class="col-7 offset-1" style="align-content: end;">
-        <div class="card h-100 d-flex flex-column">
+        <div class="d-flex align-items-center p-3">
+            <form method="post" asp-page-handler="Toggle">
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           id="toggleAutomaticAgeVerification"
+                           name="isAutomaticAgeVerificationEnabled"
+                           value="true"
+                           onchange="this.form.submit()"
+                    @(ScanModel.AutomaticAgeVerification ? "checked" : "") />
+                    <label class="form-check-label text-white" for="toggleAutomaticAgeVerification">
+                        Gebruik automatische leeftijdscontrole
+                    </label>
+                </div>
+            </form>
+            <button class="btn btn-primary ms-3" onclick="showPopup('Er worden fotos gemaakt, op basis van deze fotos wordt uw leeftijd geschat. De fotos worden niet bewaard of voor andere doelinde gebruikt.')">I</button>
+        </div>
+        <div class="card d-flex flex-column" style="height: 90%;">
             @{
                 var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
                 decimal TotalPrice = 0;
@@ -62,3 +91,56 @@
         </div>
     </div>
 </div>
+
+<script>
+    let timer;
+    let countdown = 15;
+
+    window.onload = function () {
+        if (!document.getElementById("toggleAutomaticAgeVerification").checked && document.getElementById("timerCard").style.display !== "none") {
+            startTimer();
+        }
+    };
+
+    function startTimer() {
+        document.getElementById("progressBar").style.display = "block";
+        document.getElementById("buttonText").innerText = "Ik wil gebuik maken van automatische leeftijdsconrole";
+
+        let progressBar = document.getElementById("progress");
+        let width = 100;
+
+        timer = setInterval(() => {
+            width -= 100/countdown
+            progressBar.style.width = width + '%';
+
+            if (width <= 0) {
+                clearInterval(timer);
+                activateAutomaticAgeVerification();
+            }
+        }, 1000);
+    }
+
+    function activateAutomaticAgeVerification() {
+        document.getElementById("toggleAutomaticAgeVerification").checked = true;
+        document.getElementById("toggleAutomaticAgeVerification").dispatchEvent(new Event('change'));
+        closeTimerCard();
+        setAttemptedToEnable();
+    }
+
+    function closeTimerCard() {
+        clearInterval(timer);
+        document.getElementById("timerCard").style.display = "none";
+        document.getElementById("startTimerButton").disabled = false;
+        document.getElementById("progressBar").style.display = "none";
+        document.getElementById("progress").style.width = '100%';
+    }
+
+    function setAttemptedToEnable() {
+        let input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'hasAttemptedToEnable';
+        input.value = 'true';
+        document.querySelector('form[method="post"]').appendChild(input);
+        document.querySelector('form[method="post"]').submit();
+    }
+</script>
