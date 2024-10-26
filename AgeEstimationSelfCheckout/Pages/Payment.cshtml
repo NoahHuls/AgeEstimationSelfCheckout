@@ -1,0 +1,38 @@
+﻿@page
+@model PaymentModel
+@{
+    ViewData["Title"] = "Payment page";
+}
+<div class="row h-100">
+    <div class="col-4">
+        <h1 class="text-white">Afrekenen</h1>
+    </div>
+    <div class="col-7 offset-1" style="align-content: end;">
+        <div class="card h-100 d-flex flex-column">
+            @{
+                var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
+                decimal TotalPrice = 0;
+            }
+            <div class="flex-grow-1">
+                <div class="text-center">
+                    <h1>Je kan betalen</h1>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-12 p-3 text-end">
+                    @* Bonus kaart maybe *@
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-12 p-3 text-end">
+                    <p>@TotalPrice</p>
+                </div>
+            </div>
+            <div class="row pb-5">
+                <div class="col-12 p-3">
+                    <button class="btn btn-primary w-100">Pinnen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

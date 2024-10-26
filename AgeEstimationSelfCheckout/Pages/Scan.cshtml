@@ -46,7 +46,11 @@
             </div>
             <div class="row pb-5">
                 <div class="col-8 p-3">
-                    <button class="btn btn-primary w-100">Afrekenen</button>
+                    <form method="post" asp-page="/Payment">
+                        <input type="hidden" name="totalPrice" value="@TotalPrice" />
+                        <input type="hidden" name="products" value="@System.Text.Json.JsonSerializer.Serialize(ScanModel.Products)" />
+                        <button type="submit" class="btn btn-primary w-100">Afrekenen</button>
+                    </form>
                 </div>
                 <div class="col-2 text-end p-3">
                     @* Bonus kaart maybe *@

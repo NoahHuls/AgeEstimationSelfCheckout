@@ -6,7 +6,7 @@ namespace AgeEstimationSelfCheckout.Pages
 {
     public class ScanModel : PageModel
     {
-        public static List<Product> Products { get; set; } = new List<Product>();
+        public static List<Product> Products { get; set; } = [];
 
         public void OnGet(string action)
         {
