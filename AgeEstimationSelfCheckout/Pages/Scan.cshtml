@@ -1,0 +1,60 @@
+﻿@page
+@model ScanModel
+@{
+    ViewData["Title"] = "Scan page";
+}
+<div class="row h-100">
+    <div class="col-4">
+        <h1 class="text-white">Scannen</h1>
+        <div class="card h-75">
+            <button class="btn btn-primary mb-1" onclick="location.href='?action=addBread'">Brood</button>
+            <button class="btn btn-primary mb-1" onclick="location.href='?action=addBeer'">Bier</button>
+            <button class="btn btn-primary mb-1" onclick="location.href='?action=addCheese'">Kaas</button>
+        </div>
+        <div class="row mt-5">
+            <div class="col-3">
+                <div class="card text-center mb-4" style="width: 80px; height: 60px;">
+                    <p>Help</p>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="card text-center mb-4" style="width: 80px; height: 60px;">
+                    <p>NL</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-7 offset-1" style="align-content: end;">
+        <div class="card h-100 d-flex flex-column">
+            @{
+                var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
+                decimal TotalPrice = 0;
+            }
+            <div class="flex-grow-1">
+                @foreach (var products in GroupedProducts)
+                {
+                    <div class="row p-3 product-row pt-5">
+                        <div class="col-1">@(products.Count())</div>
+                        <div class="col-8">@products.First().Name</div>
+                        <div class="col-1">@(products.First().IsAgeRestricted ? "18+" : "")</div>
+                        <div class="col-2 text-end">@(products.First().Price * products.Count())</div>
+                        @{
+                            TotalPrice += products.First().Price * products.Count();
+                        }
+                    </div>
+                }
+            </div>
+            <div class="row pb-5">
+                <div class="col-8 p-3">
+                    <button class="btn btn-primary w-100">Afrekenen</button>
+                </div>
+                <div class="col-2 text-end p-3">
+                    @* Bonus kaart maybe *@
+                </div>
+                <div class="col-2 text-end p-3">
+                    <p>@TotalPrice</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgeEstimationSelfCheckout", "AgeEstimationSelfCheckout\AgeEstimationSelfCheckout.csproj", "{B189B889-14AD-499B-AE31-887F519C953C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgeEstimationSelfCheckout", "AgeEstimationSelfCheckout\AgeEstimationSelfCheckout.csproj", "{B189B889-14AD-499B-AE31-887F519C953C}"
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Python", "Python\Python.pyproj", "{7B8EDB9C-B237-405B-B730-C2030C4B11F6}"
 EndProject
