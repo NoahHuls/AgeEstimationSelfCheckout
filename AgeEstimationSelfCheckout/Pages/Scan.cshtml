@@ -4,6 +4,8 @@
     ViewData["Title"] = "Scan page";
 }
 <div class="row h-100">
+    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
     <div class="col-4">
         <h1 class="text-white">Scannen</h1>
         <div class="card h-75">
@@ -93,6 +95,9 @@
 </div>
 
 <script>
+    let amountOfPictures = 5;
+    let waitSecondsBetweenPictures = 1;
+
     let timer;
     let countdown = 15;
 
@@ -110,7 +115,7 @@
         let width = 100;
 
         timer = setInterval(() => {
-            width -= 100/countdown
+            width -= 100 / countdown
             progressBar.style.width = width + '%';
 
             if (width <= 0) {
@@ -143,4 +148,48 @@
         document.querySelector('form[method="post"]').appendChild(input);
         document.querySelector('form[method="post"]').submit();
     }
+
+    async function setupCamera() {
+        const video = document.getElementById('video');
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+        return new Promise((resolve) => {
+            video.onloadedmetadata = () => {
+                resolve(video);
+            };
+        });
+    }
+
+    async function saveImage(dataUrl, imageName) {
+        const response = await fetch('/api/image/upload', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ imageData: dataUrl, imageName: imageName })
+        });
+
+        if (!response.ok) {
+            console.error('Image upload failed:', response.statusText);
+        } else {
+            console.log('Image uploaded successfully:', imageName);
+        }
+    }
+
+    async function capturePhotos() {
+        const video = await setupCamera();
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        for (let i = 1; i <= amountOfPictures; i++) {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataUrl = canvas.toDataURL('image/png');
+            await saveImage(dataUrl, `photo_${i}.png`);
+            await new Promise(resolve => setTimeout(resolve, waitSecondsBetweenPictures * 1000));
+        }
+
+        video.srcObject.getTracks().forEach(track => track.stop());
+    }
+
+    window.onload = capturePhotos;
 </script>
