@@ -11,7 +11,6 @@
         <div class="card h-100 d-flex flex-column">
             @{
                 var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
-                decimal TotalPrice = 0;
             }
             <div class="flex-grow-1">
                 <div class="text-center">
@@ -25,7 +24,7 @@
             </div>
             <div class="row pb-5">
                 <div class="col-12 p-3 text-end">
-                    <p>@TotalPrice</p>
+                    <p>@Model.TotalPrice</p>
                 </div>
             </div>
             <div class="row pb-5">
