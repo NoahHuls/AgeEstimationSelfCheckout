@@ -16,6 +16,7 @@ namespace AgeEstimationSelfCheckout.Pages
         public static int Countdown { get; set; } = 15;
         public PredictionResponse Result { get; set; }
         public static decimal TotalPrice = 0;
+        public static bool ScannedAlcohol;
 
         public class PredictionResponse
         {
@@ -29,19 +30,34 @@ namespace AgeEstimationSelfCheckout.Pages
             public string error_message { get; set; }
             public bool over_25 { get; set; }
             public List<float> predictions { get; set; }
-            public bool AutomaticAgeVerification = false;
+            public bool AutomaticAgeVerification { get; set; }
         }
 
         public async Task<IActionResult> OnPostToEmployee()
         {
-            await ToEmployee();
-
-            if (Result is not null)
+            if (ScannedAlcohol)
             {
-                TempData["PredictionResult"] = JsonSerializer.Serialize(Result.data);
-            }
+                await ToEmployee();
 
-            return RedirectToPage("/Employee");
+                if (Result is not null)
+                {
+                    TempData["PredictionResult"] = JsonSerializer.Serialize(Result.data);
+                }
+
+                Products = new();
+                TotalPrice = 0;
+                AutomaticAgeVerification = false;
+                AgeVerificationIsAltered = false;
+                Result = null;
+                return RedirectToPage("/Employee");
+            }
+            else
+            {
+                using var client = new HttpClient();
+                var content = new StringContent("{}", Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("http://localhost:5000/api/delete", content);
+                return RedirectToPage("/Payment");
+            }
         }
 
         public async Task ToEmployee()
@@ -68,10 +84,7 @@ namespace AgeEstimationSelfCheckout.Pages
                     Console.WriteLine("Request failed: " + ex.Message);
                 }
             }
-            else
-            {
-                await client.PostAsync("http://localhost:5000/api/zebra", content);
-            }
+            await client.PostAsync("http://localhost:5000/api/zebra", content);
         }
 
         public void OnGet(string action)

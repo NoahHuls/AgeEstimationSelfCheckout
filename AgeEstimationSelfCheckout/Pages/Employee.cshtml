@@ -11,6 +11,7 @@
                 <div class="h-100 text-center" style="background-color: deepskyblue;">
                     <h1>Kassa 1</h1>
                     <div class="pic">
+                        <img src="~/images/zebra.png" />
                     </div>
                 </div>
             </div>
@@ -19,24 +20,25 @@
                 <button type="submit" name="EmployeeChoice" value="false" class="btn btn-danger mt-2 w-100">18-</button>
             </form>
         }
-        else if (!EmployeeModel.Data.AutomaticAgeVerification)
-        {
-            <div style="height: 85%;">
-                <div class="h-100 text-center" style="background-color: orange;">
-                    <h1>Error: Geen schatting mogelijk</h1>
-                    <p>Klant heeft gekozen voor geen automatishe leeftijdscontrole</p>
-                    <button class="btn btn-primary ms-3" onclick="showPopup('Er is geen goede schatting kunnen maken, let extra goed op!')">I</button>
-                    <div class="pic">
-                    </div>
-                </div>
-            </div>
-            <input type="number" id="orange1_number" placeholder="Code" />
-            <p>Code: 1234</p>
-            <button class="btn btn-primary" onclick="checkCode('orange1_number')">Afronden</button>
-        }
         else if (Model.EmployeeChoice == true)
         {
-            if (EmployeeModel.Data.error != 0)
+            if (!EmployeeModel.Data.AutomaticAgeVerification)
+            {
+                <div style="height: 85%;">
+                    <div class="h-100 text-center" style="background-color: orange;">
+                        <h1>Error: Geen schatting mogelijk</h1>
+                        <p>Klant heeft gekozen voor geen automatishe leeftijdscontrole</p>
+                        <button class="btn btn-primary ms-3" onclick="showPopup('Er is geen goede schatting kunnen maken, let extra goed op!')">I</button>
+                        <div class="pic">
+                            <img src="~/images/zebra.png" />
+                        </div>
+                    </div>
+                </div>
+                <input type="number" id="orange1_number" placeholder="Code" />
+                <p>Code: 1234</p>
+                <button class="btn btn-primary" onclick="checkCode('orange1_number')">Afronden</button>
+            }
+            else if (EmployeeModel.Data.error != 0)
             {
                 <div style="height: 85%;">
                     <div class="h-100 text-center" style="background-color: orange;">
@@ -44,6 +46,7 @@
                         <p>@EmployeeModel.Data.error_message</p>
                         <button class="btn btn-primary ms-3" onclick="showPopup('Er is geen goede schatting kunnen maken, let extra goed op!')">I</button>
                         <div class="pic">
+                            <img src="~/images/zebra.png" />
                         </div>
                     </div>
                 </div>
@@ -58,6 +61,7 @@
                         <h1>Schatting: 25+</h1>
                         <button class="btn btn-primary ms-3" onclick="showPopup('Deze klant is geschat boven de 25.')">I</button>
                         <div class="pic">
+                            <img src="~/images/zebra.png" />
                         </div>
                     </div>
                 </div>
@@ -72,6 +76,7 @@
                         <h1>Schatting: 25-</h1>
                         <button class="btn btn-primary ms-3" onclick="showPopup('Deze klant is geschat onder de 25, let extra goed op!')">I</button>
                         <div class="pic">
+                            <img src="~/images/zebra.png" />
                         </div>
                     </div>
                 </div>

@@ -59,7 +59,7 @@
         <div class="card d-flex flex-column" style="height: 90%;">
             @{
                 var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
-                bool ScannedAlcohol = ScanModel.Products.Any(e => e.IsAgeRestricted);
+                ScanModel.ScannedAlcohol = ScanModel.Products.Any(e => e.IsAgeRestricted);
             }
             <div class="flex-grow-1">
                 @foreach (var products in GroupedProducts)
