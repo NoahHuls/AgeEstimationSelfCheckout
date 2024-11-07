@@ -7,6 +7,7 @@ from collections import OrderedDict
 from PIL import Image
 import os
 import pandas as pd
+import cv2
 
 class RGB2LAB(Module):
     def __init__(self, normalize=True):
@@ -73,8 +74,6 @@ class AgeEsitimationModel:
     def predict(self, imageDir: str) -> dict:
         imgs = os.listdir(imageDir)
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
-        os.system(f"cp {imgs[0]} {imageDir}/../zebra/tmp.png")
-        print(f"cp {imgs[0]} {imageDir}/../zebra/tmp.png")
         print(imgs)
 
         results = {"error": 0, "error_message": "", "predictions": [], 'over_25': False}
@@ -88,7 +87,11 @@ class AgeEsitimationModel:
             inputs = inputs.to(self.device)
             with torch.no_grad():
                 outputs = self.model(inputs).squeeze().tolist()
-                preds += outputs
+                if type(outputs) is float:
+                    # print("outputs is float")
+                    preds += [outputs]
+                else:
+                    preds += outputs
 
         results['predictions'] = preds
         minVal = min(preds)
@@ -96,7 +99,8 @@ class AgeEsitimationModel:
         if minVal > 25:
             results['over_25'] = True
         imgs = os.listdir(imageDir)
-        imgs.remove(f"{imgDir}/zebra.png")
+        print(imgs)
+        imgs.remove(f"zebra.png")
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         for file in imgs:
             os.remove(file)
@@ -113,6 +117,10 @@ class AgeEsitimationModel:
         img = os.listdir(imageDir)
         img = [f"{imageDir}/{img}" for img in img if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         img = img[0]
+        cvimg = cv2.imread(img)
+        cvimg = cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB)
+        cv2.imwrite(f"{imageDir}/zebra.png", cvimg)
+        del cvimg
         os.system(f"cp {img}.png {imageDir}/zebra.png")
         print(f"cp {imageDir}/../zebra/tmp.png {imageDir}/../zebra/zebra.png")
 
