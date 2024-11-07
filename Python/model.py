@@ -114,6 +114,7 @@ class AgeEsitimationModel:
             os.remove(f"{imageDir}/{file}")
 
     def zebra(self, imageDir: str):
+        os.remove(f"{imageDir}/zebra.png")
         img = os.listdir(imageDir)
         img = [f"{imageDir}/{img}" for img in img if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         img = img[0]
