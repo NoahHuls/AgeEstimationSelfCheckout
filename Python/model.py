@@ -93,7 +93,9 @@ class AgeEsitimationModel:
         preds.remove(minVal)
         if minVal > 25:
             results['over_25'] = True
-        for file in imgs['filepath']:
+        imgs = os.listdir(imageDir)
+        imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
+        for file in imgs:
             os.remove(file)
         print(results)
         return results
