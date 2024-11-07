@@ -91,6 +91,8 @@ class AgeEsitimationModel:
             if len(face_objs) >= 0:
                 results["error"] = 2
                 results["error_message"] = "Geen gezicht gedetecteerd"
+                return results
+
             for face_data in face_objs:
                 if face_data.get("is_real"):
                     facial_area = face_data["facial_area"]
@@ -102,6 +104,7 @@ class AgeEsitimationModel:
                 else:
                     results["error"] = 1
                     results["error_message"] = "Geen echt gezicht gedetecteerd"
+                    return results
 
             face_array_8bit = (largest_real_face["face"] * 255).astype(np.uint8)
             pil_image = Image.fromarray(face_array_8bit)
