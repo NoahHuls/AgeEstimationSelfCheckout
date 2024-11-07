@@ -66,6 +66,7 @@ namespace AgeEstimationSelfCheckout.Pages
             TempData["TotalPrice"] = TotalPrice.ToString();
             using var client = new HttpClient();
             var content = new StringContent("{}", Encoding.UTF8, "application/json");
+            await client.PostAsync("http://localhost:5000/api/zebra", content);
             if (AutomaticAgeVerification)
             {
                 try
@@ -84,7 +85,6 @@ namespace AgeEstimationSelfCheckout.Pages
                     Console.WriteLine("Request failed: " + ex.Message);
                 }
             }
-            await client.PostAsync("http://localhost:5000/api/zebra", content);
         }
 
         public void OnGet(string action)
