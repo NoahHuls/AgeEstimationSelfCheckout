@@ -85,6 +85,7 @@ namespace AgeEstimationSelfCheckout.Pages
                     Console.WriteLine("Request failed: " + ex.Message);
                 }
             }
+            await client.PostAsync("http://localhost:5000/api/delete", content);
         }
 
         public void OnGet(string action)
