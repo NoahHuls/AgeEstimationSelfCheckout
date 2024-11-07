@@ -21,20 +21,11 @@ class RGB2LAB(Module):
         self.normalize = normalize
 
     def forward(self, inputs):
-        # Convert RGB to [0, 1] range if necessary (optional based on input format)
         inputs = inputs / 255.0 if inputs.max() > 1.0 else inputs
-
-        # Permute inputs to [batch_size, height, width, channels] for easier manipulation
-        inputs = inputs.permute(0, 2, 3, 1)  # [batch_size, 200, 200, 3]
-
-        # Convert RGB to XYZ
+        inputs = inputs.permute(0, 2, 3, 1)
         xyz = torch.einsum('bijc,cd->bijd', inputs, self.xyz.to(inputs.device))
-
-        # Normalize for D65 white point
         if self.normalize:
             xyz = xyz / self.white_point.to(inputs.device)
-
-        # Convert XYZ to LAB
         def f(t):
             return torch.where(t > self.epsilon_cube, torch.pow(t, 1/3), (self.kappa * t + 16) / 116)
 
@@ -43,11 +34,8 @@ class RGB2LAB(Module):
         a = 500 * (f_xyz[..., 0] - f_xyz[..., 1])
         b = 200 * (f_xyz[..., 1] - f_xyz[..., 2])
 
-        # Stack L, a, and b channels together
-        lab = torch.stack([L, a, b], dim=-1)  # [batch_size, height, width, 3]
-
-        # Return LAB with dimensions [batch_size, 3, height, width]
-        return lab.permute(0, 3, 1, 2)  # [batch_size, 3, 200, 200]
+        lab = torch.stack([L, a, b], dim=-1)
+        return lab.permute(0, 3, 1, 2)
 
 class CustomImageDataset(Dataset):
     def __init__(self, dataframe, img_dir, transform=None):
@@ -107,7 +95,6 @@ class AgeEsitimationModel:
             results['over_25'] = True
         for file in imgs['filepath']:
             os.remove(file)
-            # print(f"delete: {file}")
         print(results)
         return results
 
@@ -150,7 +137,6 @@ class AgeEsitimationModel:
         for file in os.listdir(model_path):
             if file.endswith(".pt"):
                 self.modelList.append({'path': f"{model_path}", 'type': 'torch', 'model': file})
-        # print(self.modelList)
 
         self.activeModel = self.modelList[0]
         self.__loadTorchModel__(model_path, self.activeModel['model'])
@@ -249,7 +235,7 @@ class AgeEsitimationModel:
                         MaxPool2d(2),
                         Flatten(),
                         Dropout(0.3),
-                        Linear(128*(200//4)*(200//4), 512), # is  the image size is 200, and we have  maxpool layers with kernel size 2, we will have 200/2 the image thuse  200//4
+                        Linear(128*(200//4)*(200//4), 512),
                         GELU(),
                         Dropout(0.3),
                         Linear(512, 128),
@@ -272,7 +258,7 @@ class AgeEsitimationModel:
                         MaxPool2d(2),
                         Flatten(),
                         Dropout(0.3),
-                        Linear(128*(200//4)*(200//4), 512), # is  the image size is 200, and we have  maxpool layers with kernel size 2, we will have 200/2 the image thuse  200//4
+                        Linear(128*(200//4)*(200//4), 512),
                         GELU(),
                         Dropout(0.3),
                         Linear(512, 128),
@@ -295,7 +281,7 @@ class AgeEsitimationModel:
                         MaxPool2d(2),
                         Flatten(),
                         Dropout(0.3),
-                        Linear(128*(200//4)*(200//4), 512), # is  the image size is 200, and we have  maxpool layers with kernel size 2, we will have 200/2 the image thuse  200//4
+                        Linear(128*(200//4)*(200//4), 512),
                         GELU(),
                         Dropout(0.3),
                         Linear(512, 128),

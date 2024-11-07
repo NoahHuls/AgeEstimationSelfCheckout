@@ -7,9 +7,7 @@ app = Flask(__name__)
 
 @app.route('/api/predict', methods=['POST'])
 def predict_age():
-
     results = model.predict("./../AgeEstimationSelfCheckout/wwwroot/images")
-
     return jsonify(message="Prediction:", data=results)
 
 @app.route('/api/models', methods=['GET', 'POST'])
