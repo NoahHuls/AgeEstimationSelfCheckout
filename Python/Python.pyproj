@@ -24,6 +24,17 @@
     <Compile Include="main.py" />
     <Compile Include="model.py" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="models\.gitignore" />
+    <Content Include="models\saved_weights_2024_10_02-18_47_29.pt" />
+    <Content Include="models\saved_weights_2024_10_02-19_34_03.pt" />
+    <Content Include="models\saved_weights_2024_10_02-20_27_24.pt" />
+    <Content Include="models\saved_weights_2024_10_02-21_36_36.pt" />
+    <Content Include="models\saved_weights_2024_10_02-23_7_48.pt" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
        Visual Studio and specify your pre- and post-build commands in

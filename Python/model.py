@@ -110,10 +110,10 @@ class AgeEsitimationModel:
 
     def __imageToTensor__(self):
         return transforms.Compose([
-                                                                    transforms.Resize((200, 200)),
-                                                                    transforms.ToTensor(),
-                                                                    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-                                                                ])
+            transforms.Resize((200, 200)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
+        ])
 
     def setActiveModel(self, model_name: str) -> bool:
         found = False
@@ -149,15 +149,15 @@ class AgeEsitimationModel:
             return None
         match (model_name):
             case "saved_weights_2024_10_02-19_34_03.pt":
-                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-19_34_03.pt", weights_only=True))
+                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-19_34_03.pt", weights_only=True, map_location=torch.device(self.device)))
             case "saved_weights_2024_10_02-18_47_29.pt":
-                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-18_47_29.pt", weights_only=True))
+                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-18_47_29.pt", weights_only=True, map_location=torch.device(self.device)))
             case "saved_weights_2024_10_02-20_27_24.pt":
-                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-20_27_24.pt", weights_only=True))
+                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-20_27_24.pt", weights_only=True, map_location=torch.device(self.device)))
             case "saved_weights_2024_10_02-23_7_48.pt":
-                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-23_7_48.pt", weights_only=True))
+                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-23_7_48.pt", weights_only=True, map_location=torch.device(self.device)))
             case "saved_weights_2024_10_02-21_36_36.pt":
-                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-21_36_36.pt", weights_only=True))
+                self.__fixWeights__(torch.load(f"{model_path}/saved_weights_2024_10_02-21_36_36.pt", weights_only=True, map_location=torch.device(self.device)))
             case _:
                 print(f"Model {model_name} not found")
                 print("model in could not load weights")
