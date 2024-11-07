@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
+using static AgeEstimationSelfCheckout.Pages.ScanModel;
 
 namespace AgeEstimationSelfCheckout.Pages
 {
@@ -7,10 +9,17 @@ namespace AgeEstimationSelfCheckout.Pages
     {
         [BindProperty]
         public bool? EmployeeChoice { get; set; } = null;
-        public int ModelAgeEstimation { get; set; } = -1;
+
+        [BindProperty]
+        public Data Data { get; set; }
 
         public void OnGet()
         {
+            var resultJson = TempData["PredictionResult"] as string;
+            if (!string.IsNullOrEmpty(resultJson))
+            {
+                Data = JsonSerializer.Deserialize<Data>(resultJson);
+            }
         }
         public async Task<IActionResult> OnPostAsync()
         {

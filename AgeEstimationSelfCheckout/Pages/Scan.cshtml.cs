@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
+using System.Text.Json;
+using System.Text;
 
 namespace AgeEstimationSelfCheckout.Pages
 {
@@ -12,6 +14,56 @@ namespace AgeEstimationSelfCheckout.Pages
         public static bool AutomaticAgeVerification { get; set; } = false;
         public static bool AgeVerificationIsAltered { get; set; } = false;
         public static int Countdown { get; set; } = 15;
+        public PredictionResponse Result { get; set; }
+
+        public class PredictionResponse
+        {
+            public Data data { get; set; }
+            public string message { get; set; }
+        }
+
+        public class Data
+        {
+            public int error { get; set; }
+            public string error_message { get; set; }
+            public bool over_25 { get; set; }
+            public List<float> predictions { get; set; }
+        }
+
+        public async Task<IActionResult> OnPostToEmployee()
+        {
+            await ToEmployee();
+
+            TempData["PredictionResult"] = JsonSerializer.Serialize(Result.data);
+
+            return RedirectToPage("/Employee");
+        }
+
+        public async Task ToEmployee()
+        {
+            //TODO: Await 3 sec
+
+            if (AutomaticAgeVerification)
+            {
+                using var client = new HttpClient();
+                var content = new StringContent("{}", Encoding.UTF8, "application/json");
+
+                try
+                {
+                    var response = await client.PostAsync("http://localhost:5000/api/predict", content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseData = await response.Content.ReadAsStringAsync();
+                        Result = JsonSerializer.Deserialize<PredictionResponse>(responseData);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Request failed: " + ex.Message);
+                }
+            }
+        }
 
         public void OnGet(string action)
         {

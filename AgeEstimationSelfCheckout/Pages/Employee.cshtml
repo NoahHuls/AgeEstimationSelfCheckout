@@ -22,11 +22,12 @@
         }
         else if (Model.EmployeeChoice == true)
         {
-            if (Model.ModelAgeEstimation < 0)
+            if (Model.Data.error != 0)
             {
                 <div style="height: 85%;">
                     <div class="h-100 text-center" style="background-color: orange;">
                         <h1>Error: Geen schatting mogelijk</h1>
+                        <p>@Model.Data.error_message</p>
                         <button class="btn btn-primary ms-3" onclick="showPopup('Er is geen goede schatting kunnen maken, let extra goed op!')">I</button>
                         <div class="pic">
                         </div>
@@ -36,7 +37,7 @@
                 <p>Code: 1234</p>
                 <button class="btn btn-primary">Afronden</button>
             }
-            else if (Model.ModelAgeEstimation < 25)
+            else if (Model.Data.over_25)
             {
                 <div style="height: 85%;">
                     <div class="h-100 text-center" style="background-color: green;">
