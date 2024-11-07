@@ -79,16 +79,13 @@ namespace AgeEstimationSelfCheckout.Pages
                         Result = JsonSerializer.Deserialize<PredictionResponse>(responseData);
                         Result.data.AutomaticAgeVerification = AutomaticAgeVerification;
                     }
-                    else
-                    {
-                        await client.PostAsync("http://localhost:5000/api/delete", content);
-                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Request failed: " + ex.Message);
                 }
             }
+            await client.PostAsync("http://localhost:5000/api/delete", content);
         }
 
         public void OnGet(string action)
