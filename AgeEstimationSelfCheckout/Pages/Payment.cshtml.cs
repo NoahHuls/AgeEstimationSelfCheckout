@@ -1,24 +1,21 @@
-using AgeEstimationSelfCheckout.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text.Json;
+using System.Dynamic;
 
 namespace AgeEstimationSelfCheckout.Pages
 {
     public class PaymentModel : PageModel
     {
-        public List<Product> Products { get; set; } = new List<Product>();
+        [BindProperty]
+        public bool ScannedAlcohol { get; set; }
+        [BindProperty]
         public decimal TotalPrice { get; set; }
-
+        [BindProperty]
+        public bool AutomaticAgeVerification { get; set; }
 
         public void OnGet()
         {
-        }
 
-        public void OnPost(string products, decimal totalPrice)
-        {
-            TotalPrice = totalPrice;
-            Products = JsonSerializer.Deserialize<List<Product>>(products);
         }
     }
 }

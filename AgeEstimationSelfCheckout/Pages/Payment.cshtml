@@ -29,7 +29,9 @@
             </div>
             <div class="row pb-5">
                 <div class="col-12 p-3">
-                    <button class="btn btn-primary w-100">Pinnen</button>
+                    <form method="post" asp-page="/Index">
+                        <button disabled="@Model.ScannedAlcohol" type="submit" class="btn btn-primary w-100">Pinnen</button>
+                    </form>
                 </div>
             </div>
         </div>

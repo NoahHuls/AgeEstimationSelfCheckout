@@ -2,6 +2,7 @@ using AgeEstimationSelfCheckout.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 
 namespace AgeEstimationSelfCheckout.Pages
 {
@@ -10,6 +11,7 @@ namespace AgeEstimationSelfCheckout.Pages
         public static List<Product> Products { get; set; } = new List<Product>();
         public static bool AutomaticAgeVerification { get; set; } = false;
         public static bool AgeVerificationIsAltered { get; set; } = false;
+        public static int Countdown { get; set; } = 15;
 
         public void OnGet(string action)
         {
@@ -24,6 +26,16 @@ namespace AgeEstimationSelfCheckout.Pages
             else if (action == "addCheese")
             {
                 AddCheese();
+            }
+            _ = CountdownAsync();
+        }
+
+        static async Task CountdownAsync()
+        {
+            while (Countdown > 0)
+            {
+                await Task.Delay(1000);
+                Countdown--;
             }
         }
 

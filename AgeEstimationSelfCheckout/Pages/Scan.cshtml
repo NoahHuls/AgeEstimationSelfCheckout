@@ -60,6 +60,7 @@
             @{
                 var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
                 decimal TotalPrice = 0;
+                bool ScannedAlcohol = ScanModel.Products.Any(e => e.IsAgeRestricted);
             }
             <div class="flex-grow-1">
                 @foreach (var products in GroupedProducts)
@@ -78,8 +79,9 @@
             <div class="row pb-5">
                 <div class="col-8 p-3">
                     <form method="post" asp-page="/Payment">
-                        <input type="hidden" name="totalPrice" value="@TotalPrice" />
-                        <input type="hidden" name="products" value="@System.Text.Json.JsonSerializer.Serialize(ScanModel.Products)" />
+                        <input type="hidden" asp-for="@TotalPrice" />
+                        <input type="hidden" asp-for="@ScannedAlcohol" />
+                        <input type="hidden" asp-for="@ScanModel.AutomaticAgeVerification" />
                         <button type="submit" class="btn btn-primary w-100">Afrekenen</button>
                     </form>
                 </div>
@@ -93,13 +95,14 @@
         </div>
     </div>
 </div>
+<input type="hidden" id="Countdown" value="@ScanModel.Countdown" />
 
 <script>
     let amountOfPictures = 3;
     let waitSecondsBetweenPictures = 1;
 
     let timer;
-    let countdown = 15;
+    let countdown = document.getElementById("Countdown").value;
 
     window.onload = function () {
         if (!document.getElementById("toggleAutomaticAgeVerification").checked && document.getElementById("timerCard").style.display !== "none") {
@@ -114,9 +117,10 @@
 
         let progressBar = document.getElementById("progress");
         let width = 100;
+        width -= (15 - countdown + 1) * 100/15;
 
         timer = setInterval(() => {
-            width -= 100 / countdown
+            width -= 100 / 15
             progressBar.style.width = width + '%';
 
             if (width <= 0) {
