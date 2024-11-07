@@ -9,9 +9,9 @@
     </div>
     <div class="col-7 offset-1" style="align-content: end;">
         <div class="card h-100 d-flex flex-column">
-            @{
+@*             @{
                 var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
-            }
+            } *@
             <div class="flex-grow-1">
                 <div class="text-center">
                     <h1>Je kan betalen</h1>
@@ -24,13 +24,13 @@
             </div>
             <div class="row pb-5">
                 <div class="col-12 p-3 text-end">
-                    <p>@Model.TotalPrice</p>
+                    <p>@TempData["TotalPrice"]</p>
                 </div>
             </div>
             <div class="row pb-5">
                 <div class="col-12 p-3">
                     <form method="post" asp-page="/Index">
-                        <button disabled="@Model.ScannedAlcohol" type="submit" class="btn btn-primary w-100">Pinnen</button>
+                        <button type="submit" class="btn btn-primary w-100">Pinnen</button>
                     </form>
                 </div>
             </div>

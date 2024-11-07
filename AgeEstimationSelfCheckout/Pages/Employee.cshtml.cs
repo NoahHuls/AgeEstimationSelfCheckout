@@ -11,7 +11,7 @@ namespace AgeEstimationSelfCheckout.Pages
         public bool? EmployeeChoice { get; set; } = null;
 
         [BindProperty]
-        public Data Data { get; set; }
+        public static Data Data { get; set; } = new();
 
         public void OnGet()
         {

@@ -5,7 +5,6 @@
 }
 <div class="h-100 align-content-center">
     <div class="card h-75">
-
         @if (Model.EmployeeChoice is null)
         {
             <div style="height: 85%;">
@@ -20,24 +19,39 @@
                 <button type="submit" name="EmployeeChoice" value="false" class="btn btn-danger mt-2 w-100">18-</button>
             </form>
         }
+        else if (!EmployeeModel.Data.AutomaticAgeVerification)
+        {
+            <div style="height: 85%;">
+                <div class="h-100 text-center" style="background-color: orange;">
+                    <h1>Error: Geen schatting mogelijk</h1>
+                    <p>Klant heeft gekozen voor geen automatishe leeftijdscontrole</p>
+                    <button class="btn btn-primary ms-3" onclick="showPopup('Er is geen goede schatting kunnen maken, let extra goed op!')">I</button>
+                    <div class="pic">
+                    </div>
+                </div>
+            </div>
+            <input type="number" id="orange1_number" placeholder="Code" />
+            <p>Code: 1234</p>
+            <button class="btn btn-primary" onclick="checkCode('orange1_number')">Afronden</button>
+        }
         else if (Model.EmployeeChoice == true)
         {
-            if (Model.Data.error != 0)
+            if (EmployeeModel.Data.error != 0)
             {
                 <div style="height: 85%;">
                     <div class="h-100 text-center" style="background-color: orange;">
                         <h1>Error: Geen schatting mogelijk</h1>
-                        <p>@Model.Data.error_message</p>
+                        <p>@EmployeeModel.Data.error_message</p>
                         <button class="btn btn-primary ms-3" onclick="showPopup('Er is geen goede schatting kunnen maken, let extra goed op!')">I</button>
                         <div class="pic">
                         </div>
                     </div>
                 </div>
-                <input type="number" placeholder="Code" />
+                <input type="number" id="orange2_number" placeholder="Code" />
                 <p>Code: 1234</p>
-                <button class="btn btn-primary">Afronden</button>
+                <button class="btn btn-primary" onclick="checkCode('orange2_number')">Afronden</button>
             }
-            else if (Model.Data.over_25)
+            else if (EmployeeModel.Data.over_25)
             {
                 <div style="height: 85%;">
                     <div class="h-100 text-center" style="background-color: green;">
@@ -47,9 +61,9 @@
                         </div>
                     </div>
                 </div>
-                <input type="number" placeholder="Code" />
+                <input type="number" id="green_number" placeholder="Code" />
                 <p>Code: 1234</p>
-                <button class="btn btn-primary">Afronden</button>
+                <button class="btn btn-primary" onclick="checkCode('green_number')">Afronden</button>
             }
             else
             {
@@ -61,9 +75,9 @@
                         </div>
                     </div>
                 </div>
-                <input type="number" placeholder="Code" />
+                <input type="number" id="red_number" placeholder="Code" />
                 <p>Code: 1234</p>
-                <button class="btn btn-primary">Afronden</button>
+                <button class="btn btn-primary" onclick="checkCode('red_number')">Afronden</button>
             }
         }
         else
@@ -71,10 +85,48 @@
             <div style="height: 85%;">
                 <div class="h-100 text-center" style="background-color: deepskyblue;">
                     <h1>Kassa 1</h1>
-                    <input type="date" />
+                    <input id="age_field" type="date" />
                 </div>
             </div>
-            <button class="btn btn-primary">Checken</button>
+            <button class="btn btn-primary" onclick="checkAge()">Checken</button>
         }
     </div>
 </div>
+<script>
+    function checkCode(inputId) {
+        const codeInput = document.getElementById(inputId).value;
+
+        if (codeInput === '1234') {
+            window.location.href = 'https://localhost:7219/Payment';
+        } else {
+            alert('Code is incorrect. Please try again.');
+        }
+    }
+
+    function checkAge() {
+        const dob = document.getElementById('age_field').value;
+
+        if (!dob) {
+            alert('Please enter your date of birth.');
+            return;
+        }
+
+        const birthDate = new Date(dob);
+        const currentDate = new Date();
+        let age = currentDate.getFullYear() - birthDate.getFullYear();
+        const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+
+        if (monthDiff < 0 || (monthDiff === 0 && currentDate.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        if (age >= 18) {
+            window.location.href = 'https://localhost:7219/Payment';
+        } else {
+            alert('Remove alcohol');
+            setTimeout(function () {
+                window.location.href = 'https://localhost:7219/Payment';
+            }, 100);
+        }
+    }
+</script>

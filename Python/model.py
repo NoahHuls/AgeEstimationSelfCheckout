@@ -73,7 +73,8 @@ class AgeEsitimationModel:
     def predict(self, imageDir: str) -> dict:
         imgs = os.listdir(imageDir)
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
-        os.system(f"cp {imageDir}/{imgs[0]} {imageDir}/../rebra/tmp.png")
+        os.system(f"cp {imgs[0]} {imageDir}/../zebra/tmp.png")
+        print(f"cp {imgs[0]} {imageDir}/../zebra/tmp.png")
         print(imgs)
 
         results = {"error": 0, "error_message": "", "predictions": [], 'over_25': False}

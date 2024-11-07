@@ -59,7 +59,6 @@
         <div class="card d-flex flex-column" style="height: 90%;">
             @{
                 var GroupedProducts = ScanModel.Products.GroupBy(x => x.Name);
-                decimal TotalPrice = 0;
                 bool ScannedAlcohol = ScanModel.Products.Any(e => e.IsAgeRestricted);
             }
             <div class="flex-grow-1">
@@ -71,19 +70,13 @@
                         <div class="col-1">@(products.First().IsAgeRestricted ? "18+" : "")</div>
                         <div class="col-2 text-end">@(products.First().Price * products.Count())</div>
                         @{
-                            TotalPrice += products.First().Price * products.Count();
+                            ScanModel.TotalPrice += products.First().Price * products.Count();
                         }
                     </div>
                 }
             </div>
             <div class="row pb-5">
                 <div class="col-8 p-3">
-@*                     <form method="post" asp-page="/Payment">
-                        <input type="hidden" asp-for="@TotalPrice" />
-                        <input type="hidden" asp-for="@ScannedAlcohol" />
-                        <input type="hidden" asp-for="@ScanModel.AutomaticAgeVerification" />
-                        <button type="submit" class="btn btn-primary w-100">Afrekenen</button>
-                    </form> *@
                     <form method="post" asp-page-handler="ToEmployee">
                         <button type="submit" class="btn btn-primary w-100">Afrekenen</button>
                     </form>
@@ -92,7 +85,7 @@
                     @* Bonus kaart maybe *@
                 </div>
                 <div class="col-2 text-end p-3">
-                    <p>@TotalPrice</p>
+                    <p>@ScanModel.TotalPrice</p>
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ namespace AgeEstimationSelfCheckout.Pages
         public static bool AgeVerificationIsAltered { get; set; } = false;
         public static int Countdown { get; set; } = 15;
         public PredictionResponse Result { get; set; }
+        public static decimal TotalPrice = 0;
 
         public class PredictionResponse
         {
@@ -28,13 +29,17 @@ namespace AgeEstimationSelfCheckout.Pages
             public string error_message { get; set; }
             public bool over_25 { get; set; }
             public List<float> predictions { get; set; }
+            public bool AutomaticAgeVerification = false;
         }
 
         public async Task<IActionResult> OnPostToEmployee()
         {
             await ToEmployee();
 
-            TempData["PredictionResult"] = JsonSerializer.Serialize(Result.data);
+            if (Result is not null)
+            {
+                TempData["PredictionResult"] = JsonSerializer.Serialize(Result.data);
+            }
 
             return RedirectToPage("/Employee");
         }
@@ -42,7 +47,7 @@ namespace AgeEstimationSelfCheckout.Pages
         public async Task ToEmployee()
         {
             //TODO: Await 3 sec
-
+            TempData["TotalPrice"] = TotalPrice.ToString();
             if (AutomaticAgeVerification)
             {
                 using var client = new HttpClient();
@@ -56,6 +61,7 @@ namespace AgeEstimationSelfCheckout.Pages
                     {
                         var responseData = await response.Content.ReadAsStringAsync();
                         Result = JsonSerializer.Deserialize<PredictionResponse>(responseData);
+                        Result.data.AutomaticAgeVerification = AutomaticAgeVerification;
                     }
                 }
                 catch (Exception ex)
