@@ -8,6 +8,8 @@ from PIL import Image
 import os
 import pandas as pd
 import cv2
+from deepface import DeepFace
+import numpy as np
 
 class RGB2LAB(Module):
     def __init__(self, normalize=True):
@@ -75,6 +77,29 @@ class AgeEsitimationModel:
         imgs = os.listdir(imageDir)
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         print(imgs)
+        for img in imgs:
+            face_objs = DeepFace.extract_faces(
+                img_path=img,
+                detector_backend="retinaface",
+                align=True,
+                anti_spoofing=True,
+            )
+
+            max_area = 0
+            largest_real_face = None
+
+            for face_data in face_objs:
+                if face_data.get("is_real"):
+                    facial_area = face_data["facial_area"]
+                    area = facial_area["w"] * facial_area["h"]
+
+                    if area > max_area:
+                        max_area = area
+                        largest_real_face = face_data
+
+            face_array_8bit = (largest_real_face["face"] * 255).astype(np.uint8)
+            pil_image = Image.fromarray(face_array_8bit)
+            pil_image.save(img)
 
         results = {"error": 0, "error_message": "", "predictions": [], 'over_25': False}
 
