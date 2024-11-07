@@ -96,7 +96,7 @@ class AgeEsitimationModel:
         if minVal > 25:
             results['over_25'] = True
         imgs = os.listdir(imageDir)
-        imgs.remove("{imgDir}/zebra.png")
+        imgs.remove(f"{imgDir}/zebra.png")
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         for file in imgs:
             os.remove(file)
@@ -105,7 +105,7 @@ class AgeEsitimationModel:
 
     def deleteImages(self, imageDir: str):
         files = os.listdir(imageDir)
-        files.remove("{zebra.png")
+        files.remove(f"zebra.png")
         for file in files:
             os.remove(f"{imageDir}/{file}")
 
