@@ -20,5 +20,15 @@ def modelsEndpoint():
             return jsonify(model.getActiveModel())
     return jsonify(model.getAvilableModels())
 
+@app.route('/api/delete', methods=['POST'])
+def delete():
+    model.deleteImages("./../AgeEstimationSelfCheckout/wwwroot/images")
+    return jsonify(message="Deleted images")
+
+@app.route('/api/zebra', methods=['POST'])
+def zebra():
+    model.zebra("./../AgeEstimationSelfCheckout/wwwroot/images")
+    return jsonify(message="Zebra")
+
 if __name__ == '__main__':
     app.run(debug=True)

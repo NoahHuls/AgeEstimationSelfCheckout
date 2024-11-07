@@ -96,11 +96,25 @@ class AgeEsitimationModel:
         if minVal > 25:
             results['over_25'] = True
         imgs = os.listdir(imageDir)
+        imgs.remove("{imgDir}/zebra.png")
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         for file in imgs:
             os.remove(file)
         print(results)
         return results
+
+    def deleteImages(self, imageDir: str):
+        files = os.listdir(imageDir)
+        files.remove("{zebra.png")
+        for file in files:
+            os.remove(f"{imageDir}/{file}")
+
+    def zebra(self, imageDir: str):
+        img = os.listdir(imageDir)
+        img = [f"{imageDir}/{img}" for img in img if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
+        img = img[0]
+        os.system(f"cp {img}.png {imageDir}/zebra.png")
+        print(f"cp {imageDir}/../zebra/tmp.png {imageDir}/../zebra/zebra.png")
 
     def  __getTensorDevice__(self):
         if torch.backends.mps.is_available():
