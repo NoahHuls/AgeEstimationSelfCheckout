@@ -46,13 +46,12 @@ namespace AgeEstimationSelfCheckout.Pages
 
         public async Task ToEmployee()
         {
-            //TODO: Await 3 sec
+            await Task.Delay(new TimeSpan(0, 0, 3));
             TempData["TotalPrice"] = TotalPrice.ToString();
+            using var client = new HttpClient();
+            var content = new StringContent("{}", Encoding.UTF8, "application/json");
             if (AutomaticAgeVerification)
             {
-                using var client = new HttpClient();
-                var content = new StringContent("{}", Encoding.UTF8, "application/json");
-
                 try
                 {
                     var response = await client.PostAsync("http://localhost:5000/api/predict", content);
@@ -68,6 +67,10 @@ namespace AgeEstimationSelfCheckout.Pages
                 {
                     Console.WriteLine("Request failed: " + ex.Message);
                 }
+            }
+            else
+            {
+                await client.PostAsync("http://localhost:5000/api/zebra", content);
             }
         }
 

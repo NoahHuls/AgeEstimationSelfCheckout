@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text;
 using System.Text.Json;
 using static AgeEstimationSelfCheckout.Pages.ScanModel;
 
@@ -9,16 +10,20 @@ namespace AgeEstimationSelfCheckout.Pages
     {
         [BindProperty]
         public bool? EmployeeChoice { get; set; } = null;
-
-        [BindProperty]
         public static Data Data { get; set; } = new();
 
-        public void OnGet()
+        public async Task OnGetAsync()
         {
             var resultJson = TempData["PredictionResult"] as string;
             if (!string.IsNullOrEmpty(resultJson))
             {
                 Data = JsonSerializer.Deserialize<Data>(resultJson);
+                if (!Data.AutomaticAgeVerification)
+                {
+                    using var client = new HttpClient();
+                    var content = new StringContent("{}", Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync("http://localhost:5000/api/delete", content);
+                }
             }
         }
         public async Task<IActionResult> OnPostAsync()
