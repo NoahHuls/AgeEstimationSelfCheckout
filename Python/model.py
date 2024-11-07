@@ -118,7 +118,6 @@ class AgeEsitimationModel:
         img = [f"{imageDir}/{img}" for img in img if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         img = img[0]
         cvimg = cv2.imread(img)
-        cvimg = cv2.cvtColor(cvimg, cv2.COLOR_BGR2RGB)
         cv2.imwrite(f"{imageDir}/zebra.png", cvimg)
         del cvimg
         os.system(f"cp {img}.png {imageDir}/zebra.png")
