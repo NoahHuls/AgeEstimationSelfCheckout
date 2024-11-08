@@ -49,6 +49,7 @@ namespace AgeEstimationSelfCheckout.Pages
                 AutomaticAgeVerification = false;
                 AgeVerificationIsAltered = false;
                 Result = null;
+                Countdown = 15;
                 return RedirectToPage("/Employee");
             }
             else
