@@ -79,18 +79,24 @@ class AgeEsitimationModel:
         imgs = [f"{imageDir}/{img}" for img in imgs if img.endswith(".jpg") or img.endswith(".jpeg") or img.endswith(".png")]
         print(imgs)
         for img in imgs:
-            face_objs = DeepFace.extract_faces(
-                img_path=img,
-                detector_backend="retinaface",
-                align=True,
-                anti_spoofing=True,
-            )
+            try:
+                face_objs = DeepFace.extract_faces(
+                    img_path=img,
+                    detector_backend="retinaface",
+                    align=True,
+                    anti_spoofing=True
+                )
+            except:
+                results["error"] = 2
+                results["error_message"] = "Geen gezicht gedetecteerd"
+                return results
 
             max_area = 0
             largest_real_face = None
-            if len(face_objs) >= 0:
-                results["error"] = 2
-                results["error_message"] = "Geen gezicht gedetecteerd"
+
+            if len(face_objs) > 1:
+                results["error"] = 3
+                results["error_message"] = "Meerdere gezichten gedetecteerd"
                 return results
 
             for face_data in face_objs:
